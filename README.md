@@ -67,9 +67,8 @@ Predictions are well calibrated: of players given about an 80% chance to reach M
 | `src/export.py` | Stat lines, comparable players, website data |
 | `docs/` | The website (GitHub Pages) and `docs/data/*.json` predictions |
 
-To publish the site: on GitHub, go to **Settings → Pages → Deploy from a branch → `main` / `docs`**. To refresh after a new season, run `python build.py --refresh` and commit `docs/data/`.
 
-**Automatic update:** every year in early October (5 October), once the minor-league season is over, a GitHub workflow (`.github/workflows/yearly-update.yml`) downloads the new season, retrains the models and updates the website. To run it any time: **Actions → Yearly predictions update → Run workflow**.
+**Automatic update:** every year in early October (5 October), once the minor-league season is over, it downloads the new season, retrains the models and updates the website. 
 
 ## Limitations
 
