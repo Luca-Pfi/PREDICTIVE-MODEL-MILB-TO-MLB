@@ -1,0 +1,74 @@
+# Yearly MiLB -> MLB update: once the minor-league season is over, download the
+# latest season, retrain the models and publish the new predictions on the website.
+name: Yearly predictions update
+
+on:
+  schedule:
+    # 09:17 UTC on 5 October, after the minor-league season has ended.
+    - cron: "17 9 5 10 *"
+    # 09:17 UTC on the 5th of every other month: only keeps the October run alive
+    # (GitHub pauses scheduled workflows after 60 days without repository activity).
+    - cron: "17 9 5 1-9,11,12 *"
+  workflow_dispatch:   # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: yearly-update
+  cancel-in-progress: false
+
+jobs:
+  keep-alive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep the yearly schedule active
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/yearly-update.yml/enable"
+
+  update:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '17 9 5 10 *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Download the latest season, retrain and predict
+        run: python build.py --refresh
+
+      - name: Commit the new predictions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          if git diff --cached --quiet; then
+            echo "Predictions unchanged."
+            exit 0
+          fi
+          # New version stamp in index.html, so browsers load the new data files.
+          sed -i -E "s/\?v=[0-9]+/?v=$(date -u +%Y%m%d%H%M)/g" docs/index.html
+          git add docs/index.html
+          season=$(python -c "import json; print(json.load(open('docs/data/meta.json'))['season'])")
+          git commit -m "Update predictions for the $season season"
+          git push
+
+      # The website is published from the gh-pages branch, a copy of docs/.
+      - name: Publish the website
+        run: |
+          git fetch --depth=1 origin gh-pages
+          if [ "$(git rev-parse HEAD:docs)" = "$(git rev-parse 'FETCH_HEAD^{tree}')" ]; then
+            echo "Website already up to date."
+            exit 0
+          fi
+          commit=$(git commit-tree "$(git rev-parse HEAD:docs)" -p FETCH_HEAD -m "Deploy site")
+          git push origin "$commit:refs/heads/gh-pages"
