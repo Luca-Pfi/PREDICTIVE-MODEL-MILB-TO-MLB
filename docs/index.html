@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiLB to MLB Projections</title>
+  <meta name="description" content="When today's minor leaguers will reach the majors, how they'll play, and how good they could become.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=202611231659">
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Who's next to the majors?</h1>
+      <p class="lede">Projections for every minor leaguer: when they'll get the call, how they'll hit or pitch, and how good they could become.</p>
+      <a class="btn" href="#finder">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        Find a player
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="howto" aria-label="How to read the projections">
+      <div class="how">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <div><b>ETA</b><span>Year they're expected to debut in MLB.</span></div>
+      </div>
+      <div class="how">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg>
+        <div><b>MLB chance</b><span>Odds of reaching the majors within 7 years.</span></div>
+      </div>
+      <div class="how">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+        <div><b>Expected stats</b><span>Their average line over the first 3 MLB seasons, not just the rookie year.</span></div>
+      </div>
+      <div class="how">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
+        <div><b>Outlook</b><span>The kind of player they most likely become, and their best case.</span></div>
+      </div>
+    </section>
+
+    <section id="top100" aria-labelledby="top-title">
+      <div class="section-head">
+        <h2 id="top-title">Top 100 prospects</h2>
+        <div class="seg" role="group" aria-label="Filter by player type">
+          <button class="on" data-filter="all">All</button>
+          <button data-filter="H">Hitters</button>
+          <button data-filter="P">Pitchers</button>
+        </div>
+      </div>
+      <p class="hint">Click a player to see their full projection.</p>
+      <div class="table-wrap">
+        <table class="top" id="top-table">
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Player</th>
+              <th class="num">ETA</th>
+              <th>MLB chance</th>
+              <th class="hide-md">Expected MLB stats <span class="muted">first 3 seasons</span></th>
+              <th>Outlook</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="loading" id="loading">Loading…</p>
+    </section>
+
+    <section id="finder" aria-labelledby="find-title">
+      <h2 id="find-title">Find a player</h2>
+      <p class="hint">Any current minor leaguer, not just the top 100.</p>
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search by name…" autocomplete="off" aria-label="Player name">
+        <ul id="suggest" role="listbox"></ul>
+      </div>
+      <div id="card-slot"></div>
+    </section>
+  </main>
+
+  <dialog id="sheet" aria-label="Player projection">
+    <button id="sheet-close" class="close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="sheet-body"></div>
+  </dialog>
+
+  <footer class="wrap">
+    <p>Built from the MLB Stats API · Updated <span data-meta="generated"></span> · Projections are statistical estimates, not scouting reports.</p>
+  </footer>
+
+  <script src="app.js?v=202611231659"></script>
+</body>
+</html>
