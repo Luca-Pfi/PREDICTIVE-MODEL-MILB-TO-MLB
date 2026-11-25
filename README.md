@@ -14,7 +14,7 @@ The model studies MLB players from 2005 to 2026, looking at their minor-league n
 
 ```bash
 pip install -r requirements.txt
-python build.py                    # download data, train, write predictions (~2 min, first download ~5 min)
+python build.py                    # download data, train, write predictions 
 python predict.py "Eli Willits"    # full projection in the console
 python predict.py --top 25         # top 25 prospect list
 ```
